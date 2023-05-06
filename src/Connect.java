@@ -52,6 +52,34 @@ public class Connect {
         return false;
     }
     
+    public boolean favorite(Favorites favorite) {
+        Statement stmt;
+        String sql=null;
+        ResultSet rs=null;
+        try {
+            stmt = conn.createStatement();
+            sql="select * from tblfavorites where title='"+favorite.getTitle()+"'";
+            rs = stmt.executeQuery(sql);
+            if(rs.next()==false){
+                sql="insert into tblfavorites values('"+favorite.getTitle()+"',"+favorite.getGenre()+",'"+favorite.getEpisodes()+"' ,"+favorite.getType()+")";
+                stmt.executeUpdate(sql);
+                JOptionPane.showMessageDialog(null, "Movie successfully added!");
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            try {
+                conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return false;
+    }
+    
+    
+    
     MovieSeries searchMovieSeries(String title){
         Statement stmt;
         String sql=null;
