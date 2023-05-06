@@ -61,7 +61,7 @@ public class Connect {
             sql="select * from tblfavorites where title='"+favorite.getTitle()+"'";
             rs = stmt.executeQuery(sql);
             if(rs.next()==false){
-                sql="insert into tblfavorites values('"+favorite.getTitle()+"','"+favorite.getGenre()+"',"+favorite.getEpisodes()+" ,'"+favorite.getType()+"')";
+                sql="insert into tblfavorites values('"+favorite.getTitle()+"','"+favorite.getType()+"',"+favorite.getEpisodes()+" ,'"+favorite.getType()+"')";
                 stmt.executeUpdate(sql);
                 JOptionPane.showMessageDialog(null, "Successfully Added!");
                 return true;
