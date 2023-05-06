@@ -12,12 +12,24 @@ public class MovieSeries {
     private int episodes;
     private String type;
     private int watchStatus;
+    private String genre;
+    private String synopsis;
 
-    public MovieSeries(String title, int episodes, String type) {
+    public MovieSeries(String title, int episodes, String type, String genre, String synopsis) {
         this.title = title;
         this.episodes = episodes;
         this.type = type;
         this.watchStatus = 0;
+        this.genre = genre;
+        this.synopsis = synopsis;
+    }
+
+    public String getSynopsis() {
+        return synopsis;
+    }
+
+    public void setSynopsis(String synopsis) {
+        this.synopsis = synopsis;
     }
 
     public String getTitle() {
@@ -51,4 +63,13 @@ public class MovieSeries {
     public void setType(String type) {
         this.type = type;
     }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+    
 }

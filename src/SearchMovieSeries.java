@@ -1,5 +1,7 @@
 
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -16,10 +18,14 @@ public class SearchMovieSeries extends javax.swing.JFrame {
      * Creates new form SearchMovieSeries
      */
     Connect conn = null;
+    DefaultTableModel tbl;
     public SearchMovieSeries() {
         initComponents();
+        tbl = (DefaultTableModel) tblResults.getModel();
         conn = new Connect();
     }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -33,10 +39,18 @@ public class SearchMovieSeries extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         tfSearchBar = new javax.swing.JTextField();
         btnGo = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblResults = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("Search:");
+
+        tfSearchBar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tfSearchBarKeyPressed(evt);
+            }
+        });
 
         btnGo.setText("GO");
         btnGo.addActionListener(new java.awt.event.ActionListener() {
@@ -45,18 +59,49 @@ public class SearchMovieSeries extends javax.swing.JFrame {
             }
         });
 
+        tblResults.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Title", "Genre", "Episodes", "Type", "Synopsis"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        tblResults.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblResultsMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblResults);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(56, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tfSearchBar, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tfSearchBar, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 15, Short.MAX_VALUE)))
                 .addGap(52, 52, 52))
             .addGroup(layout.createSequentialGroup()
-                .addGap(160, 160, 160)
+                .addGap(169, 169, 169)
                 .addComponent(btnGo)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -67,9 +112,11 @@ public class SearchMovieSeries extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(tfSearchBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(47, 47, 47)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(btnGo)
-                .addContainerGap(176, Short.MAX_VALUE))
+                .addGap(34, 34, 34))
         );
 
         pack();
@@ -77,18 +124,26 @@ public class SearchMovieSeries extends javax.swing.JFrame {
 
     private void btnGoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGoActionPerformed
         // TODO add your handling code here:
-        MovieSeries mvs = conn.searchMovieSeries(tfSearchBar.getText().toString());
+        String str = tfSearchBar.getText().toString();
+        ArrayList<MovieSeries> mvs = conn.searchMovieSeries(str);
+        //for some reason, walay makita
         if(mvs!=null){
-            SearchMovieSeries.this.dispose();
-            java.awt.EventQueue.invokeLater(new Runnable() {
-                public void run() {
-                    new GoToMovieSeries(mvs).setVisible(true);
-                }
-            });
+            for(MovieSeries ms : mvs){
+                String data[] = {ms.getTitle(), ms.getGenre(), Integer.toString(ms.getEpisodes()), ms.getType(), ms.getSynopsis()};
+                tbl.addRow(data);
+            }
         }
         else
             JOptionPane.showMessageDialog(null, "Movie or Series does not exist.");
     }//GEN-LAST:event_btnGoActionPerformed
+
+    private void tblResultsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblResultsMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tblResultsMouseClicked
+
+    private void tfSearchBarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfSearchBarKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfSearchBarKeyPressed
 
     /**
      * @param args the command line arguments
@@ -128,6 +183,8 @@ public class SearchMovieSeries extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGo;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tblResults;
     private javax.swing.JTextField tfSearchBar;
     // End of variables declaration//GEN-END:variables
 }
