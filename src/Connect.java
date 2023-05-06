@@ -52,7 +52,7 @@ public class Connect {
         return false;
     }
     
-    public boolean favorite(Favorites favorite) {
+    public boolean favorite(MovieSeries favorite) {
         Statement stmt;
         String sql=null;
         ResultSet rs=null;
@@ -61,9 +61,9 @@ public class Connect {
             sql="select * from tblfavorites where title='"+favorite.getTitle()+"'";
             rs = stmt.executeQuery(sql);
             if(rs.next()==false){
-                sql="insert into tblfavorites values('"+favorite.getTitle()+"',"+favorite.getGenre()+",'"+favorite.getEpisodes()+"' ,"+favorite.getType()+")";
+                sql="insert into tblfavorites values('"+favorite.getTitle()+"','"+favorite.getGenre()+"',"+favorite.getEpisodes()+" ,'"+favorite.getType()+"')";
                 stmt.executeUpdate(sql);
-                JOptionPane.showMessageDialog(null, "Movie successfully added!");
+                JOptionPane.showMessageDialog(null, "Successfully Added!");
                 return true;
             }
         } catch (SQLException ex) {
