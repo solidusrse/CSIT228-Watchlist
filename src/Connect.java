@@ -39,7 +39,7 @@ public class Connect {
             sql="select * from tblmovieseries where title='"+movieseries.getTitle()+"'";
             rs = stmt.executeQuery(sql);
             if(rs.next()==false){
-                sql="insert into tblmovieseries values('"+movieseries.getTitle()+"',"+movieseries.getEpisodes()+",'"+movieseries.getType()+"' ,"+movieseries.getWatchStatus()+")";
+                sql="insert into tblmovieseries values('"+movieseries.getTitle()+"',"+movieseries.getEpisodes()+",'"+movieseries.getType()+"' ,"+movieseries.getWatchStatus()+", '"+movieseries.getGenre()+"', '"+movieseries.getSynopsis()+"')";
                 stmt.executeUpdate(sql);
                 JOptionPane.showMessageDialog(null, "Movie successfully added!");
                 return true;
@@ -56,7 +56,7 @@ public class Connect {
         return false;
     }
     
-    public boolean favorite(Favorites favorite) {
+    public boolean favorite(MovieSeries favorite) {
         Statement stmt;
         String sql=null;
         ResultSet rs=null;
@@ -65,9 +65,9 @@ public class Connect {
             sql="select * from tblfavorites where title='"+favorite.getTitle()+"'";
             rs = stmt.executeQuery(sql);
             if(rs.next()==false){
-                sql="insert into tblfavorites values('"+favorite.getTitle()+"',"+favorite.getGenre()+",'"+favorite.getEpisodes()+"' ,"+favorite.getType()+")";
+                sql="insert into tblfavorites values('"+favorite.getTitle()+"','"+favorite.getType()+"',"+favorite.getEpisodes()+" ,'"+favorite.getType()+"')";
                 stmt.executeUpdate(sql);
-                JOptionPane.showMessageDialog(null, "Movie successfully added!");
+                JOptionPane.showMessageDialog(null, "Successfully Added!");
                 return true;
             }
         } catch (SQLException ex) {
@@ -82,18 +82,23 @@ public class Connect {
         return false;
     }
     
-    MovieSeries searchMovieSeries(String title){
+    
+    
+    public ArrayList<MovieSeries> searchMovieSeries(String str){
+        ArrayList<MovieSeries> mvs = new ArrayList<>();
         Statement stmt;
         String sql=null;
         ResultSet rs=null;
         try {
             stmt = conn.createStatement();
-            sql="select * from tblmovieseries where title='"+title+"'";
+            sql="select * from tblmovieseries where title='%"+str+"%' or genre='%"+str+"%'";
             rs = stmt.executeQuery(sql);
-            if(rs.next()){
-                return new MovieSeries(rs.getString(1), rs.getInt(2), rs.getString(3));
-            }else
-                return null;
+            while(rs.next()){
+                MovieSeries movieseries = new MovieSeries(rs.getString(1), rs.getInt(2), rs.getString(3), rs.getString(5), rs.getString(6));
+                mvs.add(movieseries);
+                System.out.print("Added");
+            }
+            return mvs;
         } catch (SQLException ex) {
             Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
