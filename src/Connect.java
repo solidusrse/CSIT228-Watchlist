@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 
 /**
@@ -82,7 +83,28 @@ public class Connect {
         return false;
     }
     
-    
+    public boolean showFavs(){
+        Statement stmt = null;
+        String sql=null;
+        ResultSet rs=null;
+        
+        try {
+            sql ="SELECT * FROM tblfavorites";
+            rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                String title = rs.getString("title");
+                String genre = rs.getString("genre");
+                String type = rs.getString("episodes");
+                String episodes = String.valueOf(rs.getInt("type"));
+                String tbData[] = {title, genre, episodes, type};
+                DefaultTableModel tblModel = null;
+                tblModel.addRow(tbData);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
     
     public ArrayList<MovieSeries> searchMovieSeries(String str){
         ArrayList<MovieSeries> mvs = new ArrayList<>();
