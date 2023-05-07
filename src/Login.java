@@ -192,6 +192,10 @@ public class Login extends javax.swing.JFrame {
         switch (status) { 
             case 1 -> {
                 // Transfer to another screen, idk where
+                JFrame frame = new MainPage();
+                frame.setLocationRelativeTo(this);
+                frame.setVisible(true);
+                this.dispose();
             }
             default -> JOptionPane.showMessageDialog(this, "Username or password is incorrect", "Login Error", HEIGHT);
         }
