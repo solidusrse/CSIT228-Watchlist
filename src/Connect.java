@@ -130,7 +130,7 @@ public class Connect {
         ResultSet rs;
         try {
             stmt=conn.createStatement();
-            sql ="select * from user where username='"+username+"' and password='"+password+"'";
+            sql ="select * from tbluser where username='"+username+"' and password='"+password+"'";
             rs = stmt.executeQuery(sql);
             if (rs.next()==true)
                 return 1;
@@ -148,10 +148,10 @@ public class Connect {
         ResultSet rs;
         try {
             stmt = conn.createStatement();
-            sql="select * from user where username='"+user.getUsername()+"'";
+            sql="select * from tbluser where username='"+user.getUsername()+"'";
             rs =stmt.executeQuery(sql);
             if(rs.next()==false){
-                sql="insert into user values('"+user.getUsername()+"','"+user.getPassword()+"','"+user.getFirstname()+"','"+user.getLastname()+"')";
+                sql="insert into tbluser values('"+user.getUsername()+"','"+user.getPassword()+"','"+user.getFirstname()+"','"+user.getLastname()+"')";
                 stmt.executeUpdate(sql);
                 return true;
             }
