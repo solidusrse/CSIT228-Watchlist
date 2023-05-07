@@ -87,23 +87,16 @@ public class Connect {
         ResultSet rs=null;
         try {
             stmt = conn.createStatement();
-            sql="select * from tblmovieseries where title='%"+str+"%' or genre='%"+str+"%'";
+            sql = "select * from tblmovieseries where title like '%"+str+"%' or genre like '%"+str+"%'";
             rs = stmt.executeQuery(sql);
             while(rs.next()){
                 MovieSeries movieseries = new MovieSeries(rs.getString(1), rs.getInt(2), rs.getString(3), rs.getString(5), rs.getString(6));
                 mvs.add(movieseries);
-                System.out.print("Added");
             }
             return mvs;
         } catch (SQLException ex) {
             Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            try {
-                conn.close();
-            } catch (SQLException ex) {
-                Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+        }   
         return null;
     }
     

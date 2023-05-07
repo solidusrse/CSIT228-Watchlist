@@ -19,6 +19,7 @@ public class SearchMovieSeries extends javax.swing.JFrame {
      */
     Connect conn = null;
     DefaultTableModel tbl;
+    ArrayList<MovieSeries> mvs;
     public SearchMovieSeries() {
         initComponents();
         tbl = (DefaultTableModel) tblResults.getModel();
@@ -61,10 +62,7 @@ public class SearchMovieSeries extends javax.swing.JFrame {
 
         tblResults.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
                 "Title", "Genre", "Episodes", "Type", "Synopsis"
@@ -73,9 +71,16 @@ public class SearchMovieSeries extends javax.swing.JFrame {
             Class[] types = new Class [] {
                 java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         tblResults.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -125,8 +130,7 @@ public class SearchMovieSeries extends javax.swing.JFrame {
     private void btnGoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGoActionPerformed
         // TODO add your handling code here:
         String str = tfSearchBar.getText().toString();
-        ArrayList<MovieSeries> mvs = conn.searchMovieSeries(str);
-        //for some reason, walay makita
+        mvs = conn.searchMovieSeries(str);
         if(mvs!=null){
             for(MovieSeries ms : mvs){
                 String data[] = {ms.getTitle(), ms.getGenre(), Integer.toString(ms.getEpisodes()), ms.getType(), ms.getSynopsis()};
@@ -139,6 +143,18 @@ public class SearchMovieSeries extends javax.swing.JFrame {
 
     private void tblResultsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblResultsMouseClicked
         // TODO add your handling code here:
+        int index = tblResults.getSelectedRow();
+        String title = (String)tblResults.getValueAt(index, 0);
+        for(MovieSeries ms : mvs){
+            if (ms.getTitle().equals(title)){
+                SearchMovieSeries.this.dispose();
+                java.awt.EventQueue.invokeLater(new Runnable() {
+                     public void run() {
+                        new GoToMovieSeries(ms).setVisible(true);
+                    }
+                });
+            }
+        }
     }//GEN-LAST:event_tblResultsMouseClicked
 
     private void tfSearchBarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfSearchBarKeyPressed
