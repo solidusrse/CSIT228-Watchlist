@@ -24,6 +24,10 @@ public class Connect {
             Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    Connect(String jdbcmysqllocalhost3307dbmovieseries, String root, String d3rp1ng1) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
     
     
     public boolean addMovieSeries(MovieSeries movieseries) {
@@ -112,4 +116,47 @@ public class Connect {
         }
         return true;
     }    
+    
+    public int login(String username, String password){
+        Statement stmt;
+        String sql;
+        ResultSet rs;
+        try {
+            stmt=conn.createStatement();
+            sql ="select * from tbluser where username='"+username+"' and password='"+password+"'";
+            rs = stmt.executeQuery(sql);
+            if (rs.next()==true)
+                return 1;
+            else
+                return 0;
+        } catch (SQLException ex) {
+            // Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
+    
+    public boolean register(User user){
+        Statement stmt;
+        String sql;
+        ResultSet rs;
+        try {
+            stmt = conn.createStatement();
+            sql="select * from tbluser where username='"+user.getUsername()+"'";
+            rs =stmt.executeQuery(sql);
+            if(rs.next()==false){
+                sql="insert into tbluser values('"+user.getUsername()+"','"+user.getPassword()+"','"+user.getFirstname()+"','"+user.getLastname()+"')";
+                stmt.executeUpdate(sql);
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            try {
+                conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return false;
+    }
 }
