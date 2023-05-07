@@ -134,7 +134,7 @@ public class Favorites extends javax.swing.JFrame {
         else
             type = "Series";
         if(!title.isBlank() && episodes > 0 && !genre.isBlank()){
-            Favorite fv = new Favorite(title, episodes, type, genre);
+            MovieSeries fv = new MovieSeries(title, episodes, type, genre);
             conn.favorite(fv);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
