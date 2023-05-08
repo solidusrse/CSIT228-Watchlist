@@ -19,7 +19,7 @@ public class Connect {
     Connection conn=null;
     public Connect() {
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3307/dbmovieseries","root","d3rp1ng1");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/sunderforgesys","root","");
             JOptionPane.showMessageDialog(null, "Connected");
         } catch (SQLException ex) {
             Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
@@ -57,7 +57,7 @@ public class Connect {
         return false;
     }
     
-    public boolean favorite(MovieSeries favorite) {
+    public boolean favorite(Favorite favorite) {
         Statement stmt;
         String sql=null;
         ResultSet rs=null;
