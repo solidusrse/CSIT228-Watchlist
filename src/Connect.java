@@ -222,4 +222,37 @@ public class Connect {
             Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    public void logout() {
+        try {
+            conn.close();
+            JOptionPane.showMessageDialog(null, "Logged out");
+        } catch (SQLException ex) {
+            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public String userProfName(String username){
+        Statement stmt;
+        String sql;
+        ResultSet rs;
+        
+        String firstName, lastName;
+        try {
+            
+            stmt=conn.createStatement();
+            sql = "select * from tbluser where binary username='" + username + "'";
+            rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                firstName = rs.getString("firstname");
+                lastName = rs.getString("lastname");
+                return firstName+ " " + lastName;
+            }
+           
+               
+        } catch (SQLException ex) {
+            // Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       return username;
+    }
 }
