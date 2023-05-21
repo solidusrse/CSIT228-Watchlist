@@ -20,7 +20,7 @@ public class Connect {
     public Connect() {
         try {
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/sunderforgesys","root","");
-            JOptionPane.showMessageDialog(null, "Connected");
+            //JOptionPane.showMessageDialog(null, "Connected");
         } catch (SQLException ex) {
             Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -144,20 +144,28 @@ public class Connect {
         String sql;
         ResultSet rs;
         try {
-            stmt=conn.createStatement();
-            sql ="select * from tbluser where username='"+username+"' and password='"+password+"'";
+            stmt = conn.createStatement();
+            sql = "SELECT * FROM tbluser WHERE username='" + username + "'";
             rs = stmt.executeQuery(sql);
-            if (rs.next()==true)
-                return 1;
-            else
-                return 0;
+
+            if (rs.next()) {
+                String storedPassword = rs.getString("password");
+
+                if (password.equals(storedPassword)) {
+                    return 1; // Username exists and password matches
+                } else {
+                    return 2; // Username exists but password doesn't match
+                }
+            } else {
+                return 3; // Username doesn't exist
+            }
         } catch (SQLException ex) {
             // Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
         }
         return -1;
     }
     
-    public boolean register(User user){
+    public boolean register(User user) throws Exception{
         Statement stmt;
         String sql;
         ResultSet rs;
@@ -169,6 +177,8 @@ public class Connect {
                 sql="insert into tbluser values('"+user.getUsername()+"','"+user.getPassword()+"','"+user.getFirstname()+"','"+user.getLastname()+"')";
                 stmt.executeUpdate(sql);
                 return true;
+            } else {
+                throw new Exception("Username already exists.");
             }
         } catch (SQLException ex) {
             Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);

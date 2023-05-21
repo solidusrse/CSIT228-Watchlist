@@ -164,11 +164,7 @@ public class Login extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
-    private boolean check(){
-        return (tfUsername.getText().equals("")) || (tfPassword.getText().equals(""));
-    }
-    
+ 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
         // TODO add your handling code here:
         JFrame frame = new Register();
@@ -179,28 +175,49 @@ public class Login extends javax.swing.JFrame {
     
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         // TODO add your handling code here:
-        
-        if(check()){
-            JOptionPane.showMessageDialog(this, "All fields are required.");
-            return;
-        }
-        
-        String username = tfUsername.getText(), 
-               password = tfPassword.getText();
-        int status = connect.login(username, password);
-        
-        switch (status) { 
-            case 1 -> {
-                // Transfer to another screen, idk where
-                JFrame frame = new MainPage();
-                frame.setLocationRelativeTo(this);
-                frame.setVisible(true);
-                this.dispose();
+        try{
+            String username = tfUsername.getText().trim(); 
+            String password = tfPassword.getText();
+            getEmptyField(username, password);
+            
+            int status = connect.login(username, password);
+
+            switch (status) { 
+                case 1 -> {
+                    JFrame frame = new MainPage();
+                    frame.setLocationRelativeTo(this);
+                    frame.setVisible(true);
+                    this.dispose();
+                }
+                case 2 -> {
+                    JOptionPane.showMessageDialog(this, "Incorrect password for username", "Login Failed", HEIGHT);
+                }
+                case 3 -> {
+                    JOptionPane.showMessageDialog(this, "Username doesn't exist", "Login Failed", HEIGHT);
+                }
+                default -> JOptionPane.showMessageDialog(this, "Something went wrong", "Login Failed", JOptionPane.ERROR_MESSAGE);
             }
-            default -> JOptionPane.showMessageDialog(this, "Username or password is incorrect", "Login Error", HEIGHT);
+        } catch (Exception e){
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Login Failed", HEIGHT);
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 
+    private void getEmptyField(String username, String password) throws Exception {
+        String message = "";
+        
+        if (username.isEmpty()) {
+            message += "Username";
+        }
+        if (password.isEmpty()) {
+            if(message.length() != 0) message += " & ";
+            message += "Password";
+        }
+        if (message.length() != 0) {
+            message += " is empty!";
+            throw new Exception(message);
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */
