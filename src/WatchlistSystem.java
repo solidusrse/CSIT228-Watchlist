@@ -15,7 +15,7 @@ public class WatchlistSystem {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        WatchlistHandler login = new WatchlistHandler();
+        Login login = new Login();
         login.setVisible(true);
     }
     

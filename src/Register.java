@@ -1,4 +1,5 @@
 
+import java.util.regex.Pattern;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -190,30 +191,87 @@ public class Register extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
-    private boolean check(){
-        return tfFirstname.getText().isEmpty()==false || tfLastname.getText().isEmpty()==false || tfUsername.getText().isEmpty()==false || tfPassword.getText().isEmpty()==false;
-    }
-    
+
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
         // TODO add your handling code here:
-        if(check()==true ){
-            User user = new User(tfUsername.getText(),tfPassword.getText(), tfFirstname.getText(), tfLastname.getText());
+        try{
+            // Trim whitespaces from end and last of the strings except for password
+            String username = tfUsername.getText().trim();
+            String password = tfPassword.getText();
+            String firstname = tfFirstname.getText().trim();
+            String lastname = tfLastname.getText().trim();
+            getEmptyField(username, password, firstname, lastname);
+            passwordCheck(password);
+            
+            User user = new User(username,password,firstname,lastname);
             if(connect.register(user)){
                 JFrame frame = new Login();
                 frame.setLocationRelativeTo(this);
                 frame.setVisible(true);
                 this.dispose();
-                
+
                 JOptionPane.showMessageDialog(this, "Successfuly Registered!");
-            } else{
-                JOptionPane.showMessageDialog(this, "Username alrady exists.");
             }
-        } else{
-            JOptionPane.showMessageDialog(this, "All fields are required.");
+        } catch(Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Registration Failed", HEIGHT);
         }
     }//GEN-LAST:event_btnRegisterActionPerformed
 
+    private void getEmptyField(String username, String password, String firstname, String lastname) throws Exception {
+        String message = "";
+        
+        if (username.isEmpty()) {
+            message += "Username";
+            if(message.length() != 0) message += ", ";
+        }
+        if (password.isEmpty()) {
+            message += "Password";
+            if(message.length() != 0) message += ", ";
+        }
+        if (firstname.isEmpty()) {
+            message += "Firstname";
+            if(message.length() != 0) message += ", ";
+        }
+        if (lastname.isEmpty()) {
+            message += "Lastname";
+            if(message.length() != 0) message += ", ";
+        }
+        if (message.length() != 0) {
+            message = message.substring(0, message.lastIndexOf(',')) + " ";
+            message += "is empty!";
+            throw new Exception(message);
+        }
+    }
+    
+    private void passwordCheck(String password) throws Exception {
+        String message = "Password must satisfy the following conditions:\n";
+        int count = 1;
+        
+        if(password.length() < 6){
+            message += count++ + ".) Length must be greater than six\n";
+        }
+        
+        if (Pattern.matches(".*\\s.*", password)) {
+            message += count++ + ".) Must NOT contain whitespaces\n";
+        }
+        
+        if (!Pattern.matches(".*[!@#$%^&*()\\-=_+\\[\\]{}|;':\"<>,.?/].*", password)) {
+            message += count++ + ".) Must contain at least one special character\n";
+        }
+
+        if (!Pattern.matches(".*[A-Z].*", password)) {
+            message += count++ + ".) Must contain at least one capital letter\n";
+        }
+
+        if (!Pattern.matches(".*\\d.*", password)) {
+            message += count++ + ".) Must contain at least one number\n";
+        }
+        
+        if (message.length() != 0) {
+            throw new Exception(message);
+        }
+    }
+    
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         // TODO add your handling code here:
         JFrame frame = new Login();
