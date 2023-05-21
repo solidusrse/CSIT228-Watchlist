@@ -267,7 +267,7 @@ public class Register extends javax.swing.JFrame {
             message += count++ + ".) Must contain at least one number\n";
         }
         
-        if (message.length() != 0) {
+        if (message.substring(0, message.lastIndexOf(':')).isEmpty()) {
             throw new Exception(message);
         }
     }

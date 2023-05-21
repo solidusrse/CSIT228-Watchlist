@@ -145,7 +145,7 @@ public class Connect {
         ResultSet rs;
         try {
             stmt = conn.createStatement();
-            sql = "SELECT * FROM tbluser WHERE username='" + username + "'";
+            sql = "SELECT * FROM tbluser WHERE binary username='" + username + "'";
             rs = stmt.executeQuery(sql);
 
             if (rs.next()) {
@@ -171,23 +171,18 @@ public class Connect {
         ResultSet rs;
         try {
             stmt = conn.createStatement();
-            sql="select * from tbluser where username='"+user.getUsername()+"'";
+            sql="select * from tbluser where binary username='"+user.getUsername()+"'";
             rs =stmt.executeQuery(sql);
             if(rs.next()==false){
-                sql="insert into tbluser values('"+user.getUsername()+"','"+user.getPassword()+"','"+user.getFirstname()+"','"+user.getLastname()+"')";
+                sql="insert into tbluser(username, password, firstname, lastname) values('"+user.getUsername()+"','"+user.getPassword()+"','"+user.getFirstname()+"','"+user.getLastname()+"')";
                 stmt.executeUpdate(sql);
+                conn.close();
                 return true;
             } else {
                 throw new Exception("Username already exists.");
             }
         } catch (SQLException ex) {
             Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            try {
-                conn.close();
-            } catch (SQLException ex) {
-                Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
         return false;
     }
