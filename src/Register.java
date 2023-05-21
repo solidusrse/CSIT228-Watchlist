@@ -220,20 +220,20 @@ public class Register extends javax.swing.JFrame {
     private void getEmptyField(String username, String password, String firstname, String lastname) throws Exception {
         String message = "";
         
-        if (username.isEmpty()) {
-            message += "Username";
-            if(message.length() != 0) message += ", ";
-        }
-        if (password.isEmpty()) {
-            message += "Password";
-            if(message.length() != 0) message += ", ";
-        }
         if (firstname.isEmpty()) {
             message += "Firstname";
             if(message.length() != 0) message += ", ";
         }
         if (lastname.isEmpty()) {
             message += "Lastname";
+            if(message.length() != 0) message += ", ";
+        }
+        if (username.isEmpty()) {
+            message += "Username";
+            if(message.length() != 0) message += ", ";
+        }
+        if (password.isEmpty()) {
+            message += "Password";
             if(message.length() != 0) message += ", ";
         }
         if (message.length() != 0) {
@@ -248,7 +248,7 @@ public class Register extends javax.swing.JFrame {
         int count = 1;
         
         if(password.length() < 6){
-            message += count++ + ".) Length must be greater than six\n";
+            message += count++ + ".) Length must be greater than or equal to six\n";
         }
         
         if (Pattern.matches(".*\\s.*", password)) {
@@ -267,7 +267,7 @@ public class Register extends javax.swing.JFrame {
             message += count++ + ".) Must contain at least one number\n";
         }
         
-        if (message.substring(0, message.lastIndexOf(':')).isEmpty()) {
+        if (count > 1) {
             throw new Exception(message);
         }
     }

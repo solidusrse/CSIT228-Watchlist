@@ -184,7 +184,7 @@ public class Login extends javax.swing.JFrame {
 
             switch (status) { 
                 case 1 -> {
-                    JFrame frame = new MainPage();
+                    JFrame frame = new JFrameProfile(username);
                     frame.setLocationRelativeTo(this);
                     frame.setVisible(true);
                     this.dispose();
